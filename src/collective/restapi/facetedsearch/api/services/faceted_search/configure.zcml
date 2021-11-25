@@ -2,7 +2,7 @@
   xmlns="http://namespaces.zope.org/zope"
   xmlns:plone="http://namespaces.plone.org/plone">
 
- <adapter factory=".groupByModifiers.groupby_modifier" name="modifier_1" />
+ <adapter factory=".groupByModifiers.groupby_modifier" name="modifier_example" />
 
   <plone:service
     method="GET"
