@@ -11,6 +11,8 @@ from Products.CMFPlone.interfaces import IPloneSiteRoot
 from zope.component import getMultiAdapter
 from zope.component import getUtility
 from ZTUtils.Lazy import LazyCat
+from inspect import signature
+
 
 zcatalog_version = get_distribution("Products.ZCatalog").version
 if parse_version(zcatalog_version) >= parse_version("5.1"):
@@ -234,7 +236,14 @@ def updateFacetsByBrain(facets, brain, options):
             # e.g. uuid to title
             title = filter_value
             if filter_value is not '__EMPTY__' and callable(opts['display_modifier']):  # noqa
-                title = safe_decode(opts['display_modifier'](filter_value))
+                sig = signature(opts['display_modifier'])
+                if len(sig.parameters) == 1:
+                    title = opts['display_modifier'](filter_value)
+                else:
+                    title = opts['display_modifier'](filter_value, facet)
+
+                title = safe_decode(title)
+
 
             # Set selected state
             selected = filter_value in opts['current_idx_value']
