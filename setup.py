@@ -14,7 +14,7 @@ long_description = '\n\n'.join([
 
 setup(
     name='collective.restapi.facetedsearch',
-    version='1.0a1',
+    version='1.0.0',
     description="An add-on for Plone and plone.restapi providing a extended search service",
     long_description=long_description,
     # Get more from https://pypi.org/classifiers/
@@ -32,7 +32,7 @@ setup(
     ],
     keywords='Python Plone',
     author='smueller',
-    author_email='FakeGitUserOrEmail',
+    author_email='muellers@saw-leipzig.de',
     url='https://github.com/collective/collective.restapi.facetedsearch',
     project_urls={
         'PyPI': 'https://pypi.python.org/pypi/collective.restapi.facetedsearch',
