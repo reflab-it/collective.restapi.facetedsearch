@@ -237,7 +237,6 @@ def updateFacetsByBrain(facets, brain, options):
             title = filter_value
             if filter_value is not '__EMPTY__' and callable(opts['display_modifier']):  # noqa
                 sig = signature(opts['display_modifier'])
-                print(str(sig))
                 if len(sig.parameters) == 1:
                     title = opts['display_modifier'](filter_value)
                 else:
