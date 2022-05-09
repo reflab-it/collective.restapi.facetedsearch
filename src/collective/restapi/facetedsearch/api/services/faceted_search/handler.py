@@ -88,7 +88,7 @@ class FacetedQuerystringSearchHandler():
         b_size = int(data.get("b_size", 25))
         sort_on = data.get("sort_on", None)
         sort_order = data.get("sort_order", None)
-        limit = int(data.get("limit", 1000))
+        limit = int(data.get("limit", 10000))
         fullobjects = data.get("fullobjects", False)
         facets = data.get("facets", [])
         facets_only = data.get('facets_only', False)
@@ -96,7 +96,7 @@ class FacetedQuerystringSearchHandler():
         if not isinstance(facets, list):
             facets = [facets]
 
-        if query is None:
+        if not query:
             raise Exception("No query supplied")
 
         sort_order = "descending" if sort_order else "ascending"
@@ -123,6 +123,8 @@ class FacetedQuerystringSearchHandler():
             )
 
         lazy_resultset = querybuilder(**querybuilder_parameters)
+        if lazy_resultset == []:
+            lazy_resultset = LazyCat([])
         serializable_facets = getFacets(lazy_resultset, query, facets)
         results = getSerializableResults(lazy_resultset, self.request,
                                          fullobjects, facets_only)
