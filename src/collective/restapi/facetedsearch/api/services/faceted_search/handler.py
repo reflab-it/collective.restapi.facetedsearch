@@ -88,7 +88,12 @@ class FacetedQuerystringSearchHandler():
         b_size = int(data.get("b_size", 25))
         sort_on = data.get("sort_on", None)
         sort_order = data.get("sort_order", None)
-        limit = int(data.get("limit", 10000))
+        limit = data.get("limit", None)
+        if limit:
+            try:
+                limit = int(limit)
+            except:
+                raise Exception("limit must be an integer")
         fullobjects = data.get("fullobjects", False)
         facets = data.get("facets", [])
         facets_only = data.get('facets_only', False)
@@ -96,11 +101,17 @@ class FacetedQuerystringSearchHandler():
         if not isinstance(facets, list):
             facets = [facets]
 
+        # if no query supplied, we assume that all data is requested
         if not query:
-            raise Exception("No query supplied")
+            query = [{
+                "i":"path",
+                "o":"plone.app.querystring.operation.string.absolutePath",
+                "v": self.context.absolute_url_path()}]
+            #raise Exception("No query supplied")
 
         sort_order = "descending" if sort_order else "ascending"
 
+        #import pdb; pdb.set_trace()
         querybuilder = getMultiAdapter(
             (self.context, self.request), name="querybuilderresults"
         )
@@ -156,7 +167,7 @@ def getFacets(catalog_results, query, metadata=['portal_type']):
     facets = {}
     # Init facets
     for facet in fod:
-        facets[facet] = {'items': {}}
+        facets[facet] = {'items': {}, 'items_total': 0}
     # Get facets from brains
     for brain in catalog_results:
         updateFacetsByBrain(facets, brain, fod)
@@ -256,6 +267,7 @@ def updateFacetsByBrain(facets, brain, options):
                 'total': 1,
                 'selected': selected
             }
+        facets[facet]['items_total'] =  len(facets[facet]['items'])
 
 
 def getPossibleFacets():
