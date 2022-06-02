@@ -12,7 +12,7 @@ from zope.component import getMultiAdapter
 from zope.component import getUtility
 from ZTUtils.Lazy import LazyCat
 from inspect import signature
-
+from plone import api
 
 zcatalog_version = get_distribution("Products.ZCatalog").version
 if parse_version(zcatalog_version) >= parse_version("5.1"):
@@ -101,17 +101,20 @@ class FacetedQuerystringSearchHandler():
         if not isinstance(facets, list):
             facets = [facets]
 
-        # if no query supplied, we assume that all data is requested
+        # if no query supplied, we assume that all child data of current context is requested
         if not query:
+            site_path = api.portal.get().getPhysicalPath();
+            context_path = self.context.getPhysicalPath()
+            relative_path = context_path[len(site_path):]
+            path = "/" + "/".join(relative_path)
             query = [{
                 "i":"path",
                 "o":"plone.app.querystring.operation.string.absolutePath",
-                "v": self.context.absolute_url_path()}]
+                "v": path}]
             #raise Exception("No query supplied")
 
         sort_order = "descending" if sort_order else "ascending"
 
-        #import pdb; pdb.set_trace()
         querybuilder = getMultiAdapter(
             (self.context, self.request), name="querybuilderresults"
         )
@@ -125,7 +128,6 @@ class FacetedQuerystringSearchHandler():
             sort_order=sort_order,
             limit=limit,
         )
-
         # Exclude "self" content item from the results when ZCatalog supports NOT UUID
         # queries and it is called on a content object.
         if not IPloneSiteRoot.providedBy(self.context) and SUPPORT_NOT_UUID_QUERIES:
