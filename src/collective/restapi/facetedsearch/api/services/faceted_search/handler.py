@@ -12,7 +12,7 @@ from zope.component import getMultiAdapter
 from zope.component import getUtility
 from ZTUtils.Lazy import LazyCat
 from inspect import signature
-
+from plone import api
 
 zcatalog_version = get_distribution("Products.ZCatalog").version
 if parse_version(zcatalog_version) >= parse_version("5.1"):
@@ -88,7 +88,12 @@ class FacetedQuerystringSearchHandler():
         b_size = int(data.get("b_size", 25))
         sort_on = data.get("sort_on", None)
         sort_order = data.get("sort_order", None)
-        limit = int(data.get("limit", 1000))
+        limit = data.get("limit", None)
+        if limit:
+            try:
+                limit = int(limit)
+            except:
+                raise Exception("limit must be an integer")
         fullobjects = data.get("fullobjects", False)
         facets = data.get("facets", [])
         facets_only = data.get('facets_only', False)
@@ -96,8 +101,17 @@ class FacetedQuerystringSearchHandler():
         if not isinstance(facets, list):
             facets = [facets]
 
-        if query is None:
-            raise Exception("No query supplied")
+        # if no query supplied, we assume that all child data of current context is requested
+        if not query:
+            site_path = api.portal.get().getPhysicalPath();
+            context_path = self.context.getPhysicalPath()
+            relative_path = context_path[len(site_path):]
+            path = "/" + "/".join(relative_path)
+            query = [{
+                "i":"path",
+                "o":"plone.app.querystring.operation.string.absolutePath",
+                "v": path}]
+            #raise Exception("No query supplied")
 
         sort_order = "descending" if sort_order else "ascending"
 
@@ -114,7 +128,6 @@ class FacetedQuerystringSearchHandler():
             sort_order=sort_order,
             limit=limit,
         )
-
         # Exclude "self" content item from the results when ZCatalog supports NOT UUID
         # queries and it is called on a content object.
         if not IPloneSiteRoot.providedBy(self.context) and SUPPORT_NOT_UUID_QUERIES:
@@ -123,6 +136,8 @@ class FacetedQuerystringSearchHandler():
             )
 
         lazy_resultset = querybuilder(**querybuilder_parameters)
+        if lazy_resultset == []:
+            lazy_resultset = LazyCat([])
         serializable_facets = getFacets(lazy_resultset, query, facets)
         results = getSerializableResults(lazy_resultset, self.request,
                                          fullobjects, facets_only)
@@ -154,7 +169,7 @@ def getFacets(catalog_results, query, metadata=['portal_type']):
     facets = {}
     # Init facets
     for facet in fod:
-        facets[facet] = {'items': {}}
+        facets[facet] = {'items': {}, 'items_total': 0}
     # Get facets from brains
     for brain in catalog_results:
         updateFacetsByBrain(facets, brain, fod)
@@ -254,6 +269,7 @@ def updateFacetsByBrain(facets, brain, options):
                 'total': 1,
                 'selected': selected
             }
+        facets[facet]['items_total'] =  len(facets[facet]['items'])
 
 
 def getPossibleFacets():
