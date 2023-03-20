@@ -6,7 +6,7 @@
 collective.restapi.facetedsearch
 ================================
 
-Tell me what your product does
+This addon provides Plone-REST-Api endpoints for a faceted search. The GET endpoint is highly inspired by the REST-Api search and the POST endpoint is highly inspired by the REST-Api querystringsearch. Configuration of facets must be done by overloading GroupByCriteria of collective.collectionfilter
 
 Features
 --------
@@ -54,8 +54,8 @@ and then running ``bin/buildout``
 Contribute
 ----------
 
-- Issue Tracker: https://github.com/collective/collective.restapi.facetedsearch/issues
-- Source Code: https://github.com/collective/collective.restapi.facetedsearch
+- Issue Tracker: https://https://git.saw-leipzig.de/muellers/collective.restapi.facetedsearch/-/issues
+- Source Code: https://git.saw-leipzig.de/muellers/collective.restapi.facetedsearch.git
 - Documentation: https://docs.plone.org/foo/bar
 
 

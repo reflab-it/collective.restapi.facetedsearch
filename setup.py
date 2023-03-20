@@ -31,7 +31,7 @@ setup(
         "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
     ],
     keywords='Python Plone',
-    author='smueller',
+    author='muellers',
     author_email='muellers@saw-leipzig.de',
     url='https://github.com/collective/collective.restapi.facetedsearch',
     project_urls={

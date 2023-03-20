@@ -1,4 +1,4 @@
 Contributors
 ============
 
-- smueller, FakeGitUserOrEmail
+- muellers, muellers@saw-leipzig.de
