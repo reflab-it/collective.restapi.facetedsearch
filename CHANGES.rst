@@ -1,10 +1,10 @@
 Changelog
 =========
 
-1.0.2dev (unreleased)
------------------
+1.0.2.dev (unreleased)
+----------------------
 
--upcoming changes
+-added some project description
 
 
 1.0.1 (2022-06-02)
