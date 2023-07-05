@@ -58,7 +58,7 @@ class FacetedSearchHandler(SearchHandler):
         lazy_resultset = self.catalog.searchResults(query)
         if facets:
             serializable_facets = getFacets(lazy_resultset, query, facets)
-        results = getSerializableResults(lazy_resultset, self.request,
+        results = self.getSerializableResults(lazy_resultset, self.request,
                                          fullobjects, facets_only)
 
 
@@ -67,6 +67,9 @@ class FacetedSearchHandler(SearchHandler):
             results["possible_facets"] = getPossibleFacets()
 
         return results
+
+    def getSerializableResults(self, lazy_results, request, fullobjects, facets_only):
+        return getSerializableResults(lazy_results, request, fullobjects, facets_only)
 
 
 class FacetedQuerystringSearchHandler():
@@ -139,7 +142,7 @@ class FacetedQuerystringSearchHandler():
         if lazy_resultset == []:
             lazy_resultset = LazyCat([])
         serializable_facets = getFacets(lazy_resultset, query, facets)
-        results = getSerializableResults(lazy_resultset, self.request,
+        results = self.getSerializableResults(lazy_resultset, self.request,
                                          fullobjects, facets_only)
         results["facets"] = serializable_facets
         if possible_facets:
@@ -147,8 +150,12 @@ class FacetedQuerystringSearchHandler():
 
         return results
 
+    def getSerializableResults(self, lazy_results, request, fullobjects, facets_only):
+        return getSerializableResults(lazy_results, request, fullobjects, facets_only)
+
 
 def getSerializableResults(lazy_results, request, fullobjects, facets_only):
+    #import pdb; pdb.set_trace()
     if facets_only is not False:
         # Prepare result serialization on empty LazyMap
         empty_lazy = LazyCat([])
