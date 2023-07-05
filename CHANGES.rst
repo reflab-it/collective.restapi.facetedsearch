@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.0.2.dev (unreleased)
-----------------------
+1.0.2 (2023-07-05)
+------------------
 
 -added some project description
 
