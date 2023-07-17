@@ -33,7 +33,7 @@ setup(
     keywords='Python Plone',
     author='muellers',
     author_email='muellers@saw-leipzig.de',
-    url='https://github.com/collective/collective.restapi.facetedsearch',
+    url='https://git.saw-leipzig.de/muellers/collective.restapi.facetedsearch',
     project_urls={
         'PyPI': 'https://pypi.python.org/pypi/collective.restapi.facetedsearch',
         'Source': 'https://git.saw-leipzig.de/muellers/collective.restapi.facetedsearch.git',
