@@ -1,16 +1,16 @@
 Changelog
 =========
 
-1.0.3.dev (unreleased)
+1.0.3 (2023-07-17)
 ------------------
 
--upcoming changes
+- moved git repository to https://github.com/collective/collective.restapi.facetedsearch; modified readme.rst and setup.py
 
 
 1.0.2 (2023-07-05)
 ------------------
 
--added some project description
+- added some project description
 
 
 1.0.1 (2022-06-02)
