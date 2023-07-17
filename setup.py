@@ -36,8 +36,8 @@ setup(
     url='https://github.com/collective/collective.restapi.facetedsearch',
     project_urls={
         'PyPI': 'https://pypi.python.org/pypi/collective.restapi.facetedsearch',
-        'Source': 'https://github.com/collective/collective.restapi.facetedsearch',
-        'Tracker': 'https://github.com/collective/collective.restapi.facetedsearch/issues',
+        'Source': 'https://git.saw-leipzig.de/muellers/collective.restapi.facetedsearch.git',
+        'Tracker': 'https://git.saw-leipzig.de/muellers/collective.restapi.facetedsearch/-/issues',
         # 'Documentation': 'https://collective.restapi.facetedsearch.readthedocs.io/en/latest/',
     },
     license='GPL version 2',
