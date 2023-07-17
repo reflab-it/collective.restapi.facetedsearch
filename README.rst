@@ -29,7 +29,7 @@ Choose one or more of the available facets and add them as stringlist parameter 
 
 
 POST endpoint
-------------
+-------------
 ``@faceted-search``
 
 This endpoint accepts all parameter from the querystring-search endpoint of the REST Api, like ``query``, ``sort_on`` etc, and additionally three more: ``facets``, ``facets_only`` and ``possible_facets``. Provide the parameter in the request body as it is a post request.
