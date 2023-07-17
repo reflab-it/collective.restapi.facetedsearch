@@ -14,7 +14,7 @@ long_description = '\n\n'.join([
 
 setup(
     name='collective.restapi.facetedsearch',
-    version='1.0.2',
+    version='1.0.3.dev',
     description="An add-on for Plone and plone.restapi providing a extended search service",
     long_description=long_description,
     # Get more from https://pypi.org/classifiers/
