@@ -111,8 +111,8 @@ Here is just a list of those for reference:
 Contribute
 ==========
 
-- Issue Tracker: https://git.saw-leipzig.de/muellers/collective.restapi.facetedsearch/-/issues
-- Source Code: https://git.saw-leipzig.de/muellers/collective.restapi.facetedsearch.git
+- Issue Tracker: https://github.com/collective/collective.restapi.facetedsearch/issues
+- Source Code: https://github.com/collective/collective.restapi.facetedsearch.git
 - Documentation: https://docs.plone.org
 
 
