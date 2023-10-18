@@ -92,6 +92,7 @@ class FacetedQuerystringSearchHandler():
         sort_on = data.get("sort_on", None)
         sort_order = data.get("sort_order", None)
         limit = data.get("limit", None)
+        fullpath = data.get("fullpath", None)
         if limit:
             try:
                 limit = int(limit)
@@ -103,7 +104,6 @@ class FacetedQuerystringSearchHandler():
         possible_facets = data.get('possible_facets', False)
         if not isinstance(facets, list):
             facets = [facets]
-
         # if no query supplied, we assume that all child data of current context is requested
         if not query:
             site_path = api.portal.get().getPhysicalPath();
@@ -138,6 +138,10 @@ class FacetedQuerystringSearchHandler():
                 dict(custom_query={"UID": {"not": self.context.UID()}})
             )
 
+        if fullpath is not None:
+            querybuilder_parameters.update(
+                dict(custom_query={"path": {"query": '/Plone/library'}})
+            )
         lazy_resultset = querybuilder(**querybuilder_parameters)
         if lazy_resultset == []:
             lazy_resultset = LazyCat([])
@@ -147,7 +151,6 @@ class FacetedQuerystringSearchHandler():
         results["facets"] = serializable_facets
         if possible_facets:
             results["possible_facets"] = getPossibleFacets()
-
         return results
 
     def getSerializableResults(self, lazy_results, request, fullobjects, facets_only):
@@ -155,7 +158,6 @@ class FacetedQuerystringSearchHandler():
 
 
 def getSerializableResults(lazy_results, request, fullobjects, facets_only):
-    #import pdb; pdb.set_trace()
     if facets_only is not False:
         # Prepare result serialization on empty LazyMap
         empty_lazy = LazyCat([])
