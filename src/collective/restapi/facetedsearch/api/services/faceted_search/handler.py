@@ -139,8 +139,11 @@ class FacetedQuerystringSearchHandler():
             )
 
         if fullpath is not None:
+            if not fullpath.startswith('/'):
+                fullpath = f'/{fullpath}'
+            _path = f'{"/".join(api.portal.get().getPhysicalPath())}{fullpath}'
             querybuilder_parameters.update(
-                dict(custom_query={"path": {"query": '/Plone/library'}})
+                dict(custom_query={"path": {"query": _path}})
             )
         lazy_resultset = querybuilder(**querybuilder_parameters)
         if lazy_resultset == []:
