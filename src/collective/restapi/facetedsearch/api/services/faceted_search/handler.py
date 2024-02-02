@@ -116,7 +116,7 @@ class FacetedQuerystringSearchHandler():
                 "v": path}]
             #raise Exception("No query supplied")
 
-        sort_order = "descending" if sort_order else "ascending"
+        sort_order = sort_order if sort_order and sort_order in ['ascending', 'descending', 'reverse'] else "ascending"
 
         querybuilder = getMultiAdapter(
             (self.context, self.request), name="querybuilderresults"
