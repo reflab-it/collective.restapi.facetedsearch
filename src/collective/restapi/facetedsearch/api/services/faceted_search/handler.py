@@ -146,23 +146,18 @@ class FacetedQuerystringSearchHandler():
             querybuilder_parameters.update(
                 dict(custom_query={"path": {"query": _path}})
             )
-        lazy_resultset = querybuilder(**querybuilder_parameters)
-        if lazy_resultset == []:
-            lazy_resultset = LazyCat([])
-
+        
         if favorites is not None and favorites is True:
             tool = api.portal.get_tool('portal_favorites')
             user = api.user.get_current()
             _idx = tool.list_favorites(user.id)
-            if len(_idx) > 0:
-                idx = [i['uid'] for i in _idx]
-                tmp = [l for l in lazy_resultset if l.UID in idx]
-                if tmp == []:
-                    lazy_resultset = LazyCat([])
-                else:
-                    lazy_resultset = tmp
-            else:
-                lazy_resultset = LazyCat([])
+            querybuilder_parameters.update(
+                dict(custom_query={"UID": [i['uid'] for i in _idx] })
+            )
+
+        lazy_resultset = querybuilder(**querybuilder_parameters)
+        if lazy_resultset == []:
+            lazy_resultset = LazyCat([])
 
         serializable_facets = getFacets(lazy_resultset, query, facets)
         results = self.getSerializableResults(lazy_resultset, self.request,
