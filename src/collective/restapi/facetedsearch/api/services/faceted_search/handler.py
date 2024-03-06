@@ -202,9 +202,21 @@ class FacetedQuerystringSearchHandler():
                     tmp = item
                     tmp['selected'] = True
                     results['facets']['asset_type']['items'][i] = tmp
-                
-            #import pdb; pdb.set_trace()
-                    
+           
+            # search if query items are missing
+            for query_request in query:
+                if query_request['i'] == 'asset_type': continue
+                if query_request['i'] not in facets: continue
+                f_key = query_request['i']
+                items = results['facets'][f_key]['items']
+                if len(items) == 0:
+                    results['facets'][f_key]['items'].append(
+                    {
+                        "selected": True, 
+                        "title": 'None',
+                        "total": 0, 
+                        "value": 'none'
+                    })
         return results
 
     def getSerializableResults(self, lazy_results, request, fullobjects, facets_only):
