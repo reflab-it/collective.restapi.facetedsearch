@@ -182,6 +182,7 @@ class FacetedQuerystringSearchHandler():
             already_in = [t['value'] for t in results['facets']['asset_type']['items']]
             all_idx = [t['token'] for t in asset_type_map]
             missing_idx = [i for i in all_idx if i not in already_in]
+            # append all missing facets
             for asset in asset_type_map:
                 if asset['token'] in missing_idx:
                     results['facets']['asset_type']['items'].append(
@@ -191,6 +192,19 @@ class FacetedQuerystringSearchHandler():
                             "total": 0, 
                             "value": asset['token']
                         })
+            # setting selected for all requested asset type passed by query
+            reuqest_assets = [q['v'] for q in query if q['i'] == 'asset_type']
+            if len(reuqest_assets) == 1:
+                reuqest_assets = reuqest_assets[0]
+            for i in range(len(results['facets']['asset_type']['items'])):
+                item = results['facets']['asset_type']['items'][i]
+                if item['value'] in reuqest_assets:
+                    tmp = item
+                    tmp['selected'] = True
+                    results['facets']['asset_type']['items'][i] = tmp
+                
+            #import pdb; pdb.set_trace()
+                    
         return results
 
     def getSerializableResults(self, lazy_results, request, fullobjects, facets_only):
