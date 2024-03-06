@@ -13,6 +13,7 @@ from zope.component import getUtility
 from ZTUtils.Lazy import LazyCat
 from inspect import signature
 from plone import api
+from zope.schema.interfaces import IVocabularyFactory
 
 zcatalog_version = get_distribution("Products.ZCatalog").version
 if parse_version(zcatalog_version) >= parse_version("5.1"):
@@ -94,6 +95,7 @@ class FacetedQuerystringSearchHandler():
         limit = data.get("limit", None)
         fullpath = data.get("fullpath", None)
         favorites = data.get("favorites", None)
+        force_assets = data.get("force_assets", None)
         if limit:
             try:
                 limit = int(limit)
@@ -103,6 +105,7 @@ class FacetedQuerystringSearchHandler():
         facets = data.get("facets", [])
         facets_only = data.get('facets_only', False)
         possible_facets = data.get('possible_facets', False)
+
         if not isinstance(facets, list):
             facets = [facets]
         # if no query supplied, we assume that all child data of current context is requested
@@ -165,6 +168,29 @@ class FacetedQuerystringSearchHandler():
         results["facets"] = serializable_facets
         if possible_facets:
             results["possible_facets"] = getPossibleFacets()
+
+        if 'asset_type' not in results['facets']:
+            results['facets']['asset_type'] = {
+                'items': [],
+                'items_total': 0
+            }
+        
+        if force_assets is not None and force_assets is True:
+            vocabulary_factory = getUtility(IVocabularyFactory, name="tagetik.community.library.AssetTypesVocabulary")
+            vocabulary = vocabulary_factory(api.portal.get())
+            asset_type_map = [{'title':t.title, 'token': t.token} for t in vocabulary._terms if t.title != '']
+            already_in = [t['value'] for t in results['facets']['asset_type']['items']]
+            all_idx = [t['token'] for t in asset_type_map]
+            missing_idx = [i for i in all_idx if i not in already_in]
+            for asset in asset_type_map:
+                if asset['token'] in missing_idx:
+                    results['facets']['asset_type']['items'].append(
+                        {
+                            "selected": False, 
+                            "title": asset['title'],
+                            "total": 0, 
+                            "value": asset['token']
+                        })
         return results
 
     def getSerializableResults(self, lazy_results, request, fullobjects, facets_only):
