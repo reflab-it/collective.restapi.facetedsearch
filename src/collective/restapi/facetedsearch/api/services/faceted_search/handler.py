@@ -138,7 +138,7 @@ class FacetedQuerystringSearchHandler():
         limit = data.get("limit", None)
         fullpath = data.get("fullpath", None)
         favorites = data.get("favorites", None)
-        force_assets = data.get("force_assets", None)
+        force_all = data.get("force_all", None)
         if limit:
             try:
                 limit = int(limit)
@@ -212,11 +212,11 @@ class FacetedQuerystringSearchHandler():
         if possible_facets:
             results["possible_facets"] = getPossibleFacets()
 
-        if force_assets is not None and force_assets is True:
+        if force_all is not None and force_all is True:
 
-            for library_facet in library_facets:
-                cur_facet_type = library_facets['type']
-                cur_vocabulary = library_facets['vocabulary']
+            for library_facet in LIBRARY_DATA:
+                cur_facet_type = library_facet['type']
+                cur_vocabulary = library_facet['vocabulary']
                 if cur_facet_type not in results['facets']:
                     results['facets'][cur_facet_type] = {
                         'items': [],
