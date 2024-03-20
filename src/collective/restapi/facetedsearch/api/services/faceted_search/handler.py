@@ -266,56 +266,6 @@ class FacetedQuerystringSearchHandler():
             
         return results
 
-        # if 'asset_type' not in results['facets']:
-        #     results['facets']['asset_type'] = {
-        #         'items': [],
-        #         'items_total': 0
-        #     }
-        
-        # if force_assets is not None and force_assets is True:
-        #     vocabulary_factory = getUtility(IVocabularyFactory, name="tagetik.community.library.AssetTypesVocabulary")
-        #     vocabulary = vocabulary_factory(api.portal.get())
-        #     asset_type_map = [{'title':t.title, 'token': t.token} for t in vocabulary._terms if t.title != '']
-        #     already_in = [t['value'] for t in results['facets']['asset_type']['items']]
-        #     all_idx = [t['token'] for t in asset_type_map]
-        #     missing_idx = [i for i in all_idx if i not in already_in]
-        #     # append all missing facets
-        #     for asset in asset_type_map:
-        #         if asset['token'] in missing_idx:
-        #             results['facets']['asset_type']['items'].append(
-        #                 {
-        #                     "selected": False, 
-        #                     "title": asset['title'],
-        #                     "total": 0, 
-        #                     "value": asset['token']
-        #                 })
-        #     # setting selected for all requested asset type passed by query
-        #     reuqest_assets = [q['v'] for q in query if q['i'] == 'asset_type']
-        #     if len(reuqest_assets) == 1:
-        #         reuqest_assets = reuqest_assets[0]
-        #     for i in range(len(results['facets']['asset_type']['items'])):
-        #         item = results['facets']['asset_type']['items'][i]
-        #         if item['value'] in reuqest_assets:
-        #             tmp = item
-        #             tmp['selected'] = True
-        #             results['facets']['asset_type']['items'][i] = tmp
-           
-        #     # search if query items are missing
-        #     for query_request in query:
-        #         if query_request['i'] == 'asset_type': continue
-        #         if query_request['i'] not in facets: continue
-        #         f_key = query_request['i']
-        #         items = results['facets'][f_key]['items']
-        #         if len(items) == 0:
-        #             results['facets'][f_key]['items'].append(
-        #             {
-        #                 "selected": True, 
-        #                 "title": 'None',
-        #                 "total": 0, 
-        #                 "value": 'none'
-        #             })
-        # return results
-
     def getSerializableResults(self, lazy_results, request, fullobjects, facets_only):
         return getSerializableResults(lazy_results, request, fullobjects, facets_only)
 
