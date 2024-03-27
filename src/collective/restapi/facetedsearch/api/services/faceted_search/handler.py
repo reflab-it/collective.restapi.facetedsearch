@@ -188,7 +188,7 @@ class FacetedQuerystringSearchHandler():
             querybuilder_parameters.update(
                 dict(custom_query={"path": {"query": _path}})
             )
-        
+
         if favorites is not None and favorites is True:
             tool = api.portal.get_tool('portal_favorites')
             user = api.user.get_current()
@@ -218,7 +218,7 @@ class FacetedQuerystringSearchHandler():
                         'items': [],
                         'items_total': 0
                     }
-                
+
                 vocabulary_factory = getUtility(IVocabularyFactory, name=cur_vocabulary)
                 vocabulary = vocabulary_factory(api.portal.get())
                 asset_type_map = [{'title':t.title, 'token': t.token} for t in vocabulary._terms if t.title != '']
@@ -230,9 +230,9 @@ class FacetedQuerystringSearchHandler():
                     if asset['token'] in missing_idx:
                         results['facets'][cur_facet_type]['items'].append(
                             {
-                                "selected": False, 
+                                "selected": False,
                                 "title": asset['title'],
-                                "total": 0, 
+                                "total": 0,
                                 "value": asset['token']
                             })
                 reuqest_assets = [q['v'] for q in query if q['i'] == cur_facet_type]
@@ -244,22 +244,22 @@ class FacetedQuerystringSearchHandler():
                         tmp = item
                         tmp['selected'] = True
                         results['facets'][cur_facet_type]['items'][i] = tmp
-            
-                # search if query items are missing
-                for query_request in query:
-                    if query_request['i'] == cur_facet_type: continue
-                    if query_request['i'] not in facets: continue
-                    f_key = query_request['i']
-                    items = results['facets'][f_key]['items']
-                    if len(items) == 0:
-                        results['facets'][f_key]['items'].append(
-                        {
-                            "selected": True, 
-                            "title": 'None',
-                            "total": 0, 
-                            "value": 'none'
-                        })
-            
+
+                # # search if query items are missing
+                # for query_request in query:
+                #     if query_request['i'] == cur_facet_type: continue
+                #     if query_request['i'] not in facets: continue
+                #     f_key = query_request['i']
+                #     items = results['facets'][f_key]['items']
+                #     if len(items) == 0:
+                #         results['facets'][f_key]['items'].append(
+                #         {
+                #             "selected": True,
+                #             "title": 'None',
+                #             "total": 0,
+                #             "value": 'none'
+                #         })
+
         return results
 
     def getSerializableResults(self, lazy_results, request, fullobjects, facets_only):
