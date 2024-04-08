@@ -208,57 +208,48 @@ class FacetedQuerystringSearchHandler():
         if possible_facets:
             results["possible_facets"] = getPossibleFacets()
 
-        if force_all is not None and force_all is True:
+
+        query_by_index = {}
+        for item in query:
+            query_by_index[item['i']] = item['v']
+
+
+
+        if force_all is True:
 
             for library_facet in LIBRARY_DATA:
                 cur_facet_type = library_facet['type']
-                cur_vocabulary = library_facet['vocabulary']
                 if cur_facet_type not in results['facets']:
                     results['facets'][cur_facet_type] = {
                         'items': [],
                         'items_total': 0
                     }
 
-                vocabulary_factory = getUtility(IVocabularyFactory, name=cur_vocabulary)
+                vocabulary_factory = getUtility(
+                    IVocabularyFactory, name=library_facet['vocabulary'])
                 vocabulary = vocabulary_factory(api.portal.get())
-                asset_type_map = [{'title':t.title, 'token': t.token} for t in vocabulary._terms if t.title != '']
-                already_in = [t['value'] for t in results['facets'][cur_facet_type]['items']]
-                all_idx = [t['token'] for t in asset_type_map]
-                missing_idx = [i for i in all_idx if i not in already_in]
-                # append all missing facets
-                for asset in asset_type_map:
-                    if asset['token'] in missing_idx:
-                        results['facets'][cur_facet_type]['items'].append(
-                            {
-                                "selected": False,
-                                "title": asset['title'],
-                                "total": 0,
-                                "value": asset['token']
-                            })
-                reuqest_assets = [q['v'] for q in query if q['i'] == cur_facet_type]
-                if len(reuqest_assets) == 1:
-                    reuqest_assets = reuqest_assets[0]
-                for i in range(len(results['facets'][cur_facet_type]['items'])):
-                    item = results['facets'][cur_facet_type]['items'][i]
-                    if item['value'] in reuqest_assets:
-                        tmp = item
-                        tmp['selected'] = True
-                        results['facets'][cur_facet_type]['items'][i] = tmp
 
-                # # search if query items are missing
-                # for query_request in query:
-                #     if query_request['i'] == cur_facet_type: continue
-                #     if query_request['i'] not in facets: continue
-                #     f_key = query_request['i']
-                #     items = results['facets'][f_key]['items']
-                #     if len(items) == 0:
-                #         results['facets'][f_key]['items'].append(
-                #         {
-                #             "selected": True,
-                #             "title": 'None',
-                #             "total": 0,
-                #             "value": 'none'
-                #         })
+                facet_query_values = query_by_index.get(cur_facet_type) or []
+                vocabulary_facets = {}
+                for term in vocabulary:
+                    if not term.title:
+                        continue
+
+                    value = term.token
+                    vocabulary_facets[value] = {
+                        "selected": value in facet_query_values,
+                        "title": term.title,
+                        "total": 0,
+                        "value": value
+                    }
+
+                facet_data = results['facets'][cur_facet_type]
+                for item in facet_data['items']:
+                    item_id = item['value']
+                    if item_id in vocabulary_facets:
+                        vocabulary_facets[item_id]["total"] = item['total']
+
+                facet_data['items'] = list(vocabulary_facets.values())
 
         return results
 
