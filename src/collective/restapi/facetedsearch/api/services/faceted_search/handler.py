@@ -59,6 +59,10 @@ LIBRARY_DATA = [
         'type': 'technologies',
         'vocabulary': 'tagetik.community.library.TechnologiesVocabulary',
     },
+    {
+        'type': 'external_usage',
+        'vocabulary': 'tagetik.community.library.ExternalUsagesVocabulary',
+    },
 ]
 
 class FacetedSearchHandler(SearchHandler):
